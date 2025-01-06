@@ -1,0 +1,47 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Server",
+            "program": "${workspaceFolder}/.",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "outputCapture": "std",
+            "env": {
+                "ACCEPT": "${workspaceFolder}/accept.server.json",
+                //"DISPATCHER_URL": "http://localhost:8083",
+                "LOG_LEVEL": "debug",
+                "HOSTNAME": "localhost",
+            }
+        },
+        {
+            "name": "Launch Client",
+            "request": "launch",
+            "runtimeArgs": [               
+                "run-script",
+                "dev:client"
+            ],
+            "runtimeExecutable": "npm",
+            "outputCapture": "std",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node",
+            "envFile": "${workspaceFolder}/.env",
+            "env": {
+                "ACCEPT": "${workspaceFolder}/accept.json",
+                "BROKER_TOKEN": "04692aef-bf51-40c0-a9a4-92b4a2a4ac85",
+                "BROKER_SERVER_URL": "http://localhost:7341",
+                "PORT": "7342",
+                "LOG_LEVEL": "info"
+            }
+        },  
+
+    ]
+}
