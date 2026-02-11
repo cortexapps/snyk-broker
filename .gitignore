@@ -54,4 +54,4 @@ Thumbs.db
 #################################
 
 config.universal.json
-config.universaldev.json
+config.universaldev.json.vscode/
