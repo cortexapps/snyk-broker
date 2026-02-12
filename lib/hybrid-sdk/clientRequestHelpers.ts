@@ -29,9 +29,10 @@ export class HybridClientRequestHandler {
     this.options = getConfig();
 
     this.req.headers['snyk-request-id'] ||= uuid();
-    this.responseWantedOverWs = req.headers['x-broker-ws-response']
-      ? true
-      : false;
+    this.responseWantedOverWs =
+      this.options.forceWsResponse || 
+      !!req.headers['x-broker-ws-response'];
+
     this.logContext = {
       url: this.req.url,
       requestMethod: this.req.method,
