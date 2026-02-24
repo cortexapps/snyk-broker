@@ -50,7 +50,7 @@ describe('Test HTTP request helpers', () => {
       headers: {},
       method: 'GET',
     });
-    expect(response).toEqual({ body: 'OK', headers: {}, statusCode: 200 });
+    expect(response).toEqual({ body: Buffer.from('OK'), headers: {}, statusCode: 200 });
   });
 
   it('Retries a request twice successfully', async () => {
@@ -59,7 +59,7 @@ describe('Test HTTP request helpers', () => {
       headers: {},
       method: 'GET',
     });
-    expect(response).toEqual({ body: 'OK', headers: {}, statusCode: 200 });
+    expect(response).toEqual({ body: Buffer.from('OK'), headers: {}, statusCode: 200 });
   });
 
   it('Retries a request till failure', async () => {
@@ -127,7 +127,7 @@ describe('Test HTTP request helpers', () => {
       headers: {},
       method: 'GET',
     });
-    expect(response).toEqual({ body: 'OK', headers: {}, statusCode: 200 });
+    expect(response).toEqual({ body: Buffer.from('OK'), headers: {}, statusCode: 200 });
     delete process.env.INSECURE_DOWNSTREAM;
   });
 
@@ -139,7 +139,7 @@ describe('Test HTTP request helpers', () => {
       headers: {},
       method: 'GET',
     });
-    expect(response).toEqual({ body: 'OK', headers: {}, statusCode: 200 });
+    expect(response).toEqual({ body: Buffer.from('OK'), headers: {}, statusCode: 200 });
     delete process.env.INSECURE_DOWNSTREAM;
   });
   it('INSECURE DOWNSTREAM overrides https to http streaming requests', async () => {

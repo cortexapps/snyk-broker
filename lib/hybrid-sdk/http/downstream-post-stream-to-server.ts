@@ -312,7 +312,13 @@ class BrokerServerPostResponseHandler {
     this.#initHttpClientRequest();
     pipeline(this.#buffer, this.#brokerSrvPostRequestHandler);
     this.#sendIoData(JSON.stringify(responseData));
-    this.#buffer.write(JSON.stringify(body));
+    this.#buffer.write(
+      body instanceof Uint8Array
+        ? body
+        : typeof body === 'object'
+          ? JSON.stringify(body)
+          : body,
+    );
     this.#buffer.end();
   }
 }

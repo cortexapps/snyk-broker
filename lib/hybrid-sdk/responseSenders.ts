@@ -85,11 +85,10 @@ export class HybridResponseHandler {
     }
 
     if (this.options.RES_BODY_URL_SUB && isJson(response.headers)) {
-      const replaced = replaceUrlPartialChunk(
-        response.body,
-        null,
-        this.options,
-      );
+      const bodyStr = response.body instanceof Uint8Array
+        ? Buffer.from(response.body).toString('utf-8')
+        : response.body;
+      const replaced = replaceUrlPartialChunk(bodyStr, null, this.options);
       response.body = replaced.newChunk;
     }
     const status = (response && response.statusCode) || 500;
@@ -179,7 +178,11 @@ export class HybridResponseHandler {
         this.websocketConnectionHandler?.send(
           'chunk',
           this.requestMetadata.payloadStreamingId,
-          JSON.stringify(responseData.body),
+          responseData.body instanceof Uint8Array
+            ? responseData.body
+            : typeof responseData.body === 'object'
+              ? JSON.stringify(responseData.body)
+              : responseData.body,
           true,
         );
       }
