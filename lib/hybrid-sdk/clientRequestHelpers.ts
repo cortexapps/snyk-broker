@@ -29,9 +29,9 @@ export class HybridClientRequestHandler {
     this.options = getConfig();
 
     this.req.headers['snyk-request-id'] ||= uuid();
-    this.responseWantedOverWs =
-      this.options.forceWsResponse || 
-      !!req.headers['x-broker-ws-response'];
+
+    // Require the value to be exactly 'true' (case insensitive) to be considered true, otherwise false
+    this.responseWantedOverWs = String(req.headers['x-broker-ws-response']).toLowerCase() === 'true';
 
     this.logContext = {
       url: this.req.url,
