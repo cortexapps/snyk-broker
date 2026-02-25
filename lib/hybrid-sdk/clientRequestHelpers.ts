@@ -130,17 +130,18 @@ export class HybridClientRequestHandler {
           '[HTTP Flow][Relay] Return response from Websocket back to HTTP connection';
         if (ioResponse.status <= 299) {
           logger.debug(this.logContext, logMsg);
-          let responseBodyString = '';
-          if (typeof ioResponse.body === 'string') {
-            responseBodyString = ioResponse.body;
+          let responseBodyBytes = 0;
+          if (ioResponse.body instanceof Uint8Array) {
+            responseBodyBytes = ioResponse.body.length;
+          } else if (typeof ioResponse.body === 'string') {
+            responseBodyBytes = Buffer.byteLength(ioResponse.body, 'utf-8');
           } else if (typeof ioResponse.body === 'object') {
-            responseBodyString = JSON.stringify(ioResponse.body);
-          }
-          if (responseBodyString) {
-            const responseBodyBytes = Buffer.byteLength(
-              responseBodyString,
+            responseBodyBytes = Buffer.byteLength(
+              JSON.stringify(ioResponse.body),
               'utf-8',
             );
+          }
+          if (responseBodyBytes > 0) {
             observeResponseSize({
               bytes: responseBodyBytes,
               isStreaming: false,
@@ -162,14 +163,21 @@ export class HybridClientRequestHandler {
           .status(ioResponse.status)
           .set(ioResponse.headers);
 
+        // Ensure binary bodies are Buffer for Express compatibility
+        const body =
+          ioResponse.body instanceof Uint8Array &&
+          !Buffer.isBuffer(ioResponse.body)
+            ? Buffer.from(ioResponse.body)
+            : ioResponse.body;
+
         const encodingType = undefsafe(ioResponse, 'headers.transfer-encoding');
         try {
           // keep chunked http requests without content-length header
           if (encodingType === 'chunked') {
-            httpResponse.write(ioResponse.body);
+            httpResponse.write(body);
             httpResponse.end();
           } else {
-            httpResponse.send(ioResponse.body);
+            httpResponse.send(body);
           }
         } catch (err) {
           logger.error(

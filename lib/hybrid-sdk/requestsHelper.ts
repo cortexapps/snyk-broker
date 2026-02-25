@@ -68,7 +68,10 @@ export const makeLegacyRequest = async (
 
     const status = (response && response.statusCode) || 500;
     if (options.RES_BODY_URL_SUB && isJson(response.headers)) {
-      const replaced = replaceUrlPartialChunk(response.body, null, options);
+      const bodyStr = response.body instanceof Uint8Array
+        ? Buffer.from(response.body).toString('utf-8')
+        : response.body;
+      const replaced = replaceUrlPartialChunk(bodyStr, null, options);
       response.body = replaced.newChunk;
     }
     if (status > 404) {

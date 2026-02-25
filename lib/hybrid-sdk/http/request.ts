@@ -51,11 +51,11 @@ export const makeRequestToDownstream = async (
         localRequest.url,
         options,
         (response) => {
-          let data = '';
+          const chunks: Buffer[] = [];
 
           // A chunk of data has been received.
           response.on('data', (chunk) => {
-            data += chunk;
+            chunks.push(Buffer.from(chunk));
           });
 
           // The whole response has been received.
@@ -78,7 +78,7 @@ export const makeRequestToDownstream = async (
             resolve({
               headers: response.headers,
               statusCode: response.statusCode,
-              body: data,
+              body: Buffer.concat(chunks),
             });
           });
           response.on('error', (error) => {
