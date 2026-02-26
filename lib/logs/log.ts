@@ -1,7 +1,7 @@
 import { log as logger } from './logger';
 
 export const formatBodyForLog = (body: unknown, headers?: Record<string, string>): unknown => {
-  if (!(body instanceof Uint8Array)) {
+  if (!(body instanceof Uint8Array) || body.length === 0) {
     return body;
   }
   const contentType = (headers?.['content-type'] || '').toLowerCase();
