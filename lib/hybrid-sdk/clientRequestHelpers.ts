@@ -130,6 +130,7 @@ export class HybridClientRequestHandler {
           '[HTTP Flow][Relay] Return response from Websocket back to HTTP connection';
         if (ioResponse.status <= 299) {
           logger.debug(this.logContext, logMsg);
+       
           let responseBodyBytes = 0;
           if (ioResponse.body instanceof Uint8Array) {
             responseBodyBytes = ioResponse.body.length;

@@ -3,7 +3,7 @@ import { BrokerServerPostResponseHandler } from './http/downstream-post-stream-t
 import { legacyStreaming } from './requestsHelper';
 import { log as logger } from '../logs/logger';
 import { IncomingMessage } from 'node:http';
-import { logError, logResponse } from '../logs/log';
+import { formatBodyForLog, logError, logResponse } from '../logs/log';
 import { isJson } from '../common/utils/json';
 import { replaceUrlPartialChunk } from '../common/utils/replace-vars';
 import { RequestMetadata } from './types';
@@ -189,7 +189,13 @@ export class HybridResponseHandler {
     } else {
       // Used if x-broker-ws-response:true header on server side
       logger.debug(
-        { ...this.logContext, responseData },
+        {
+          ...this.logContext,
+          responseData: {
+            ...responseData,
+            body: formatBodyForLog(responseData.body, responseData.headers),
+          },
+        },
         '[Websocket Flow] (Legacy) Sending fixed response over WebSocket connection',
       );
       this.websocketResponseHandler(responseData);
