@@ -130,19 +130,7 @@ export class HybridClientRequestHandler {
           '[HTTP Flow][Relay] Return response from Websocket back to HTTP connection';
         if (ioResponse.status <= 299) {
           logger.debug(this.logContext, logMsg);
-          // Convert Uint8Array to string for text-like content types
-          const contentType = (
-            undefsafe(ioResponse, 'headers.content-type') || ''
-          ).toLowerCase();
-          const isTextContent =
-            contentType.startsWith('text/') || contentType.includes('json');
-          if (
-            isTextContent &&
-            ioResponse.body instanceof Uint8Array
-          ) {
-            ioResponse.body = Buffer.from(ioResponse.body).toString('utf-8');
-          }
-
+       
           let responseBodyBytes = 0;
           if (ioResponse.body instanceof Uint8Array) {
             responseBodyBytes = ioResponse.body.length;
