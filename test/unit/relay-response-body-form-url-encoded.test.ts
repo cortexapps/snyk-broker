@@ -27,8 +27,7 @@ const dummyWebsocketHandler: WebSocketConnection = {
   },
   latency: 0,
   options: {
-    ping: 0,
-    pong: 0,
+    pingTimeout: 0,
     queueSize: Infinity,
     reconnect: '',
     stategy: '',

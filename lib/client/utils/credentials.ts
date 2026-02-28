@@ -102,9 +102,12 @@ export const checkCredentials = async (
 
       logger.error(data, response && response.body, 'Systemcheck failed');
     } else {
-      const parsedBodyResponse = isJson(response.headers)
-        ? JSON.parse(response.body)
+      const bodyString = Buffer.isBuffer(response.body)
+        ? response.body.toString()
         : response.body;
+      const parsedBodyResponse = isJson(response.headers)
+        ? JSON.parse(bodyString)
+        : bodyString;
 
       response.body = parsedBodyResponse;
       if (process.env.JEST_WORKER_ID) {
