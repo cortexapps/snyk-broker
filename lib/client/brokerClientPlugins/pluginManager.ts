@@ -17,9 +17,15 @@ export const loadPlugins = async (pluginsFolderPath: string, clientOpts) => {
       for (const pluginFile of pluginsFiles.filter((filename) =>
         filename.endsWith('.js'),
       )) {
-        const plugin = await import(`${pluginsFolderPath}/${pluginFile}`);
+        const pluginModule = await import(`${pluginsFolderPath}/${pluginFile}`);
+        // Support both named and default exports for Plugin class
+        const PluginClass = pluginModule.Plugin || pluginModule.default;
+        if (!PluginClass) {
+          logger.error({}, `Plugin file ${pluginFile} does not export a Plugin class.`);
+          continue;
+        }
         // Passing the config object so we can mutate things like filters instead of READONLY
-        const pluginInstance = new plugin.Plugin(clientOpts.config);
+        const pluginInstance = new PluginClass(clientOpts.config);
         const applicableBrokerTypes = pluginInstance.getApplicableTypes();
         applicableBrokerTypes.forEach((applicableBrokerType) => {
           if (
