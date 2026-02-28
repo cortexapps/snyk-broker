@@ -52,8 +52,7 @@ export interface ConnectionMetadata {
 export interface WebSocketConnection {
   options: {
     reconnect: any;
-    ping: number;
-    pong: number;
+    pingTimeout: number;
     timeout: number;
     transport: any;
     queueSize: any;

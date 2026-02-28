@@ -129,8 +129,7 @@ export const createWebSocket = (
       retries: 30,
       max: 20 * 60 * 1000,
     },
-    ping: parseInt(localClientOps.config.socketPingInterval) || 25000,
-    pong: parseInt(localClientOps.config.socketPongTimeout) || 10000,
+    pingTimeout: parseInt(localClientOps.config.socketPongTimeout) || 45000,
     timeout: parseInt(localClientOps.config.socketConnectTimeout) || 10000,
   };
 
