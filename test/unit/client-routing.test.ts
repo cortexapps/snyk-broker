@@ -84,13 +84,13 @@ describe('client routing via x-broker-client-id header', () => {
     expect(response.body.marker).toEqual(CLIENT_B.socketMarker);
   });
 
-  it('falls back to the first client when x-broker-client-id does not match', async () => {
+  it('returns 404 when x-broker-client-id does not match any client', async () => {
     const response = await request(app)
       .get(`/broker/${TOKEN}/path`)
       .set('x-broker-client-id', 'nonexistent-client');
 
-    expect(response.status).toEqual(200);
-    expect(response.body.marker).toEqual(CLIENT_A.socketMarker);
+    expect(response.status).toEqual(404);
+    expect(response.body).toEqual({ ok: false });
   });
 });
 

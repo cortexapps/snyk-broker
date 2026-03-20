@@ -71,8 +71,15 @@ export const overloadHttpRequestWithConnectionDetailsMiddleware = async (
   const selectedClient = requestedClientId
     ? clientPool.find(
         (conn) => conn.metadata && conn.metadata.clientId === requestedClientId,
-      ) ?? clientPool[0]
+      )
     : clientPool[0];
+  if (!selectedClient) {
+    logger.warn(
+      { desensitizedToken, requestedClientId },
+      'no matching client found for x-broker-client-id',
+    );
+    return res.status(404).json({ ok: false });
+  }
   res.locals.websocket = selectedClient.socket;
   res.locals.socketVersion = selectedClient.socketVersion;
   res.locals.capabilities = selectedClient.metadata.capabilities;
