@@ -83,6 +83,9 @@ export const overloadHttpRequestWithConnectionDetailsMiddleware = async (
   res.locals.websocket = selectedClient.socket;
   res.locals.socketVersion = selectedClient.socketVersion;
   res.locals.capabilities = selectedClient.metadata.capabilities;
+  if (selectedClient.metadata.clientId) {
+    res.setHeader('x-broker-client-id', selectedClient.metadata.clientId);
+  }
   req['locals'] = {};
   req['locals']['capabilities'] = selectedClient.metadata.capabilities;
   // strip the leading url

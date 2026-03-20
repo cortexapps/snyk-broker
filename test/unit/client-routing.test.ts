@@ -73,6 +73,7 @@ describe('client routing via x-broker-client-id header', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body.marker).toEqual(CLIENT_A.socketMarker);
+    expect(response.headers['x-broker-client-id']).toEqual(CLIENT_A.id);
   });
 
   it('routes to a specific client when x-broker-client-id is set', async () => {
@@ -82,6 +83,7 @@ describe('client routing via x-broker-client-id header', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body.marker).toEqual(CLIENT_B.socketMarker);
+    expect(response.headers['x-broker-client-id']).toEqual(CLIENT_B.id);
   });
 
   it('returns 404 when x-broker-client-id does not match any client', async () => {
