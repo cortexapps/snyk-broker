@@ -64,14 +64,20 @@ export const overloadHttpRequestWithConnectionDetailsMiddleware = async (
     }
   }
 
-  // Grab a first (newest) client from the pool
-  // This is really silly...
-  res.locals.websocket = connections.get(token)[0].socket;
-  res.locals.socketVersion = connections.get(token)[0].socketVersion;
-  res.locals.capabilities = connections.get(token)[0].metadata.capabilities;
+  // Select a specific client from the pool if requested, otherwise use the
+  // first (newest) client.
+  const clientPool = connections.get(token);
+  const requestedClientId = req.headers['x-broker-client-id'];
+  const selectedClient = requestedClientId
+    ? clientPool.find(
+        (conn) => conn.metadata && conn.metadata.clientId === requestedClientId,
+      ) ?? clientPool[0]
+    : clientPool[0];
+  res.locals.websocket = selectedClient.socket;
+  res.locals.socketVersion = selectedClient.socketVersion;
+  res.locals.capabilities = selectedClient.metadata.capabilities;
   req['locals'] = {};
-  req['locals']['capabilities'] =
-    connections.get(token)[0].metadata.capabilities;
+  req['locals']['capabilities'] = selectedClient.metadata.capabilities;
   // strip the leading url
   req.url = req.url.slice(`/broker/${token}`.length);
   if (req.url.includes('connection_role')) {

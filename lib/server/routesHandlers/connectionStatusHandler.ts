@@ -14,6 +14,7 @@ export const connectionStatusHandler = async (req: Request, res: Response) => {
     const clientsMetadata = connections.get(req.params.token).map((conn) => ({
       version: conn.metadata && conn.metadata.version,
       filters: conn.metadata && conn.metadata.filters,
+      clientId: conn.metadata && conn.metadata.clientId,
     }));
     return res.status(200).json({ ok: true, clients: clientsMetadata });
   } else {

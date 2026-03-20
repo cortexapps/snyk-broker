@@ -107,6 +107,7 @@ describe('proxy requests originating from behind the broker client', () => {
     expect(connectionStatusBody).toStrictEqual({
       version: version,
       filters: expectedFilters,
+      clientId: expect.any(String),
     });
   });
 
