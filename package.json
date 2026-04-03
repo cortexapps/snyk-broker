@@ -130,6 +130,9 @@
     "engine.io-client": {
       "ws": "~8.18.3"
     },
+    "express": {                                                                                                                                                                          
+      "path-to-regexp": "0.1.13"                                                                                                                                                        
+    },
     "setheader": {
       "debug": "2.6.9"
     }
