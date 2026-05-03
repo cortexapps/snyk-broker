@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2019",
-    "module": "NodeNext",
+    "module": "commonjs",
     "allowJs": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -13,7 +13,7 @@
     "alwaysStrict": false,
     "esModuleInterop": true,
     "noUnusedLocals": true,
-    "moduleResolution":"node"
+    "moduleResolution": "node"
   },
   "include": ["./lib/**/*", "./cli/**/*"],
 }
