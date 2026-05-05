@@ -2,7 +2,7 @@ import { hashToken } from '../../common/utils/token';
 import { log as logger } from '../../logs/logger';
 import { getConfig } from '../../common/config/config';
 import { axiosInstance } from '../../hybrid-sdk/http/axios';
-import { v4 as uuid } from 'uuid';
+import { randomUUID } from 'node:crypto';
 
 class DispatcherClient {
   #url;
@@ -91,7 +91,7 @@ class DispatcherClient {
   }
 
   async #makeRequest(logContext, url, method, requestBody?, cb?) {
-    const requestId = uuid();
+    const requestId = randomUUID();
     // version *must* be provided
     const urlWithVersion = new URL(url);
     urlWithVersion.searchParams.append('version', this.#version);

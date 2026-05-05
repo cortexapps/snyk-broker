@@ -1,7 +1,9 @@
 import { log as logger } from '../../../logs/logger';
 import type { CheckOptions, CheckResult } from '../types';
 import type { Config } from '../../types/config';
-import { validate } from 'uuid';
+
+const UUID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function validateBrokerToken(
   checkOptions: CheckOptions,
@@ -19,7 +21,7 @@ export async function validateBrokerToken(
     } satisfies CheckResult;
   }
 
-  if (!validate(brokerToken)) {
+  if (!UUID_REGEX.test(brokerToken)) {
     return {
       id: checkOptions.id,
       name: checkOptions.name,

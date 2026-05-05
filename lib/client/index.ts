@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import { randomUUID } from 'node:crypto';
 import { createWebSocket } from './socket';
 import { log as logger } from '../logs/logger';
 import { forwardHttpRequest } from '../common/relay/forwardHttpRequest';
@@ -52,7 +52,7 @@ export const main = async (clientOpts: ClientOpts) => {
   try {
     logger.info({ version }, 'Broker starting in client mode');
     let hookResults: HookResults = {};
-    clientOpts.config.brokerClientId = uuidv4();
+    clientOpts.config.brokerClientId = randomUUID();
     clientOpts.config.logEnableBody = 'false';
     clientOpts.config.LOG_ENABLE_BODY = 'false';
     logger.info(
