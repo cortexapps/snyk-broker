@@ -12,8 +12,7 @@
     "noImplicitAny": false,
     "alwaysStrict": false,
     "esModuleInterop": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true
+    "noUnusedLocals": true
   },
   "include": ["./lib/**/*", "./cli/**/*"],
 }
