@@ -20,6 +20,9 @@ export default async (): Promise<Config> => {
     transform: {
       '^.+\\.(t|j)s$': 'ts-jest',
     },
+    // uuid 14 ships ESM-only (`type: module`, `export` syntax). Allow
+    // ts-jest to transform it instead of Jest's default node_modules skip.
+    transformIgnorePatterns: ['/node_modules/(?!(uuid)/)'],
     verbose: true,
   };
 };
