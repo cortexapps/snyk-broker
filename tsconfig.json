@@ -13,7 +13,8 @@
     "alwaysStrict": false,
     "esModuleInterop": true,
     "noUnusedLocals": true,
-    "moduleResolution":"node"
+    "moduleResolution": "NodeNext",
+    "skipLibCheck": true
   },
   "include": ["./lib/**/*", "./cli/**/*"],
 }
