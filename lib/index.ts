@@ -42,14 +42,14 @@ export const app = async ({ port = 7341, client = false, config }) => {
 
     if (method == 'client') {
       return await (
-        await import('./client')
+        await import('./client/index.js')
       ).main({
         config: localConfig,
         port: localConfig.port || port,
       });
     } else {
       return await (
-        await import('./server')
+        await import('./server/index.js')
       ).main({
         config: localConfig,
         port: localConfig.port || port,
