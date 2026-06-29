@@ -73,7 +73,7 @@
     "express": "^4.21.1",
     "express-prom-bundle": "^5.1.5",
     "global-agent": "^3.0.0",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.2.0",
     "jsonwebtoken": "^9.0.2",
     "lodash.escaperegexp": "^4.1.2",
     "lodash.mapvalues": "^4.6.0",
@@ -123,12 +123,12 @@
     "node": "20.11.0"
   },
   "overrides": {
-    "form-data": "4.0.4",
+    "form-data": "4.0.6",
     "follow-redirects": "^1.16.0",
     "koa": "2.16.4",
     "jws": "3.2.3",
     "qs": "^6.15.2",
-    "ws": "~8.20.1",
+    "ws": "~8.21.0",
     "express": {
       "path-to-regexp": "0.1.13"
     },
