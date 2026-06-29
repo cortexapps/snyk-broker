@@ -123,12 +123,12 @@
     "node": "20.11.0"
   },
   "overrides": {
-    "form-data": "4.0.4",
+    "form-data": "4.0.6",
     "follow-redirects": "^1.16.0",
     "koa": "2.16.4",
     "jws": "3.2.3",
     "qs": "^6.15.2",
-    "ws": "~8.20.1",
+    "ws": "~8.21.0",
     "express": {
       "path-to-regexp": "0.1.13"
     },
