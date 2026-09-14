@@ -85,7 +85,11 @@ export const handleIdentifyOnSocket = (clientData, socket, token): boolean => {
 
   socket.on('chunk', streamingResponse(token));
   socket.on('request', response(token));
-  socket.on('incoming::ping', (time) => {
+  // Primus names heartbeat events from each peer's own point of view: this spark writes
+  // `primus::ping::<time>` and emits `incoming::pong` when the client echoes it back, so
+  // `incoming::ping` is the client-side event and never fires here. The echoed timestamp is
+  // this server's own, which is what makes the latency the dispatcher records a round trip.
+  socket.on('incoming::pong', (time) => {
     setImmediate(
       async () => await clientPinged(token, clientId, clientVersion, time),
     );

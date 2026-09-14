@@ -74,14 +74,17 @@ describe('Broker Server Dispatcher API interaction', () => {
     }
   });
 
-  it.skip('should fire off clientPinged call successfully with server response', async () => {
-    const time = Date.now();
-    const fakeLatency = 1;
+  it('should fire off clientPinged call successfully with server response', async () => {
+    const sentAt = Date.now() - 25;
+    // `latency` is measured when the request is built, so it cannot be pinned to an exact
+    // value. Match any query and assert the parts that are deterministic.
+    let capturedUri = '';
     nock(`${serverUrl}`)
-      .post(
-        `/internal/brokerservers/0/connections/${hashedToken}?broker_client_id=${clientId}&request_type=client-pinged&latency=${fakeLatency}&version=${apiVersion}`,
+      .post((uri) =>
+        uri.startsWith(`/internal/brokerservers/0/connections/${hashedToken}?`),
       )
       .reply((uri, requestBody) => {
+        capturedUri = uri;
         spyFn(JSON.parse(requestBody));
         return [200, 'OK'];
       });
@@ -89,14 +92,9 @@ describe('Broker Server Dispatcher API interaction', () => {
     process.env.DISPATCHER_URL = `${serverUrl}`;
     process.env.hostname = '0';
     await loadBrokerConfig();
-    const dispatcher = require('../../lib/dispatcher');
+    const dispatcher = require('../../lib/server/infra/dispatcher');
     await expect(
-      dispatcher.clientPinged(
-        token,
-        clientId,
-        clientVersion,
-        time - fakeLatency,
-      ),
+      dispatcher.clientPinged(token, clientId, clientVersion, sentAt),
     ).resolves.not.toThrowError();
     expect(spyLogWarn).toHaveBeenCalledTimes(0);
     expect(spyFn).toBeCalledWith({
@@ -107,6 +105,12 @@ describe('Broker Server Dispatcher API interaction', () => {
         },
       },
     });
+
+    const query = new URLSearchParams(capturedUri.split('?')[1]);
+    expect(query.get('request_type')).toBe('client-pinged');
+    expect(query.get('broker_client_id')).toBe(clientId);
+    expect(query.get('version')).toBe(decodeURIComponent(apiVersion));
+    expect(Number(query.get('latency'))).toBeGreaterThanOrEqual(25);
   });
 
   it('should fire off clientConnected call successfully with warnings', async () => {
