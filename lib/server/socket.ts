@@ -5,8 +5,13 @@ import { SocketHandler } from './types/socket';
 import { handleIoError } from './socketHandlers/errorHandler';
 import { handleSocketConnection } from './socketHandlers/connectionHandler';
 import { initConnectionHandler } from './socketHandlers/initHandlers';
+import {
+  loadSessionRoutingConfig,
+  prefixSessionId,
+  sessionRoutingMiddleware,
+} from './sessionRouting';
+import { log as logger } from '../logs/logger';
 // import { maskToken } from '../common/utils/token';
-// import { log as logger } from '../logs/logger';
 
 const socketConnections = new Map();
 
@@ -30,6 +35,28 @@ const socket = ({ server, loadedServerOpts }): SocketHandler => {
   };
 
   const websocket = new Primus(server, ioConfig);
+
+  const sessionRouting = loadSessionRoutingConfig(loadedServerOpts.config);
+  if (sessionRouting) {
+    const engine = websocket.transformer.service;
+    const generateId = engine.generateId.bind(engine);
+    engine.generateId = async (req) =>
+      prefixSessionId(sessionRouting.nodeId, await generateId(req));
+    websocket.use(
+      'session-routing',
+      sessionRoutingMiddleware(sessionRouting),
+      {},
+      0,
+    );
+    logger.info(
+      {
+        nodeId: sessionRouting.nodeId,
+        peerUrlTemplate: sessionRouting.peerUrlTemplate,
+        nodeIdPattern: sessionRouting.nodeIdPattern.source,
+      },
+      'Session routing enabled',
+    );
+  }
   // websocket.authorize(async (req, done) => {
   //   const maskedToken = maskToken(
   //     req.uri.pathname.replaceAll(/^\/primus\/([^/]+)\//g, '$1').toLowerCase(),
