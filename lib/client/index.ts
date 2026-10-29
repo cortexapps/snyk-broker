@@ -21,6 +21,7 @@ import {
   validateMinimalConfig,
 } from './hooks/startup/processHooks';
 import { isWebsocketConnOpen } from './utils/socketHelpers';
+import { disableBrotliDecoding } from './utils/disableBrotliDecoding';
 import { ClientOpts } from '../common/types/options';
 import { websocketConnectionSelectorMiddleware } from './routesHandler/websocketConnectionMiddlewares';
 import { getClientConfigMetadata } from './config/configHelpers';
@@ -51,6 +52,8 @@ process.on('uncaughtException', (error) => {
 export const main = async (clientOpts: ClientOpts) => {
   try {
     logger.info({ version }, 'Broker starting in client mode');
+    disableBrotliDecoding();
+    logger.info('brotli decoding disabled (CVE-2026-111497)');
     let hookResults: HookResults = {};
     clientOpts.config.brokerClientId = uuidv4();
     clientOpts.config.logEnableBody = 'false';
